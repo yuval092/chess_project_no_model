@@ -4,14 +4,14 @@ ranks: 8
 board_thickness: 0.02
 board_origin_x: -0.28
 board_origin_y: -0.28
-board_origin_z: 0.75
+board_origin_z: 0.5
 light_square_rgba: [0.86, 0.80, 0.68, 1.0]
 dark_square_rgba: [0.32, 0.45, 0.36, 1.0]
 board_rgba: [0.18, 0.16, 0.14, 1.0]
-table_height: 0.75
+table_height: 0.5
 graveyard_slot_spacing: 0.075
-graveyard_white_x_offset: 0.14
-pawn_storage_slot_spacing: 0.05
-pawn_storage_front_offset: 0.10
-reserve_slot_spacing: 0.05
-reserve_area_offset_y: 0.06
+graveyard_x_gap: 0.05
+pawn_storage_slot_spacing: 0.055
+pawn_storage_front_offset: 0.20
+reserve_slot_spacing: 0.055
+reserve_area_offset_y: 0.27

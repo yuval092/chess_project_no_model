@@ -40,11 +40,36 @@ class MuJoCoEnv:
         self.model = mujoco.MjModel.from_xml_path(self.xml_path)
         self.data = mujoco.MjData(self.model)
         mujoco.mj_forward(self.model, self.data)
+        # Pre-initialize arm joints so the weld has zero error on the very first step.
+        self._set_initial_arm_pose()
+
+    def _set_initial_arm_pose(self) -> None:
+        """Set arm joints to initial_qpos and align mocap to actual EE without torque spike."""
+        import mujoco
+        for joint_name, value in self.config.arm.initial_qpos.items():
+            try:
+                j = self.model.joint(joint_name)
+                self.data.qpos[j.qposadr[0]] = value
+            except Exception:
+                pass
+        mujoco.mj_forward(self.model, self.data)
+        for i in range(self.model.neq):
+            if self.model.eq_type[i] == mujoco.mjtEq.mjEQ_WELD:
+                self.model.eq_data[i, :7] = np.array([0., 0., 0., 0., 0., 0., 1.])
+        gl_pos = self.data.body(self.config.arm.ee_weld_body_name).xpos.copy()
+        gl_quat = self.data.body(self.config.arm.ee_weld_body_name).xquat.copy()
+        self.set_mocap_pos(self.config.arm.mocap_body_name, gl_pos)
+        self.set_mocap_quat(self.config.arm.mocap_body_name, gl_quat)
+        mujoco.mj_forward(self.model, self.data)
 
     def step(self, n: int = 1) -> None:
         self._require_loaded()
         import mujoco
+        crane_quat = np.array(self.config.arm.crane_down_quat)
         for i in range(n):
+            # Enforce crane orientation every timestep so the weld always corrects toward
+            # pointing straight down, regardless of what other code called before step().
+            self.set_mocap_quat(self.config.arm.mocap_body_name, crane_quat)
             mujoco.mj_step(self.model, self.data)
             if self.viewer is not None and i % 10 == 0:
                 self.viewer.sync()
@@ -139,28 +164,44 @@ class MuJoCoEnv:
 
     def set_ee_target(self, pos: np.ndarray) -> None:
         self.set_mocap_pos(self.config.arm.mocap_body_name, pos)
+        self.set_mocap_quat(self.config.arm.mocap_body_name, np.array(self.config.arm.crane_down_quat))
 
     def set_ee_quat(self, quat: np.ndarray) -> None:
         self.set_mocap_quat(self.config.arm.mocap_body_name, quat)
 
     def initialize_arm(self) -> None:
+        """Set arm joints to initial_qpos and freeze the weld at the resulting EE position.
+
+        After this call the arm is stationary in the crane pose.  Call
+        move_arm_to_home() separately (after pieces have settled) to drive the
+        end-effector to home_position.
+        """
         self._require_loaded()
         import mujoco
         for joint_name, value in self.config.arm.initial_qpos.items():
-            j = self.model.joint(joint_name)
-            self.data.qpos[j.qposadr[0]] = value
+            try:
+                j = self.model.joint(joint_name)
+                self.data.qpos[j.qposadr[0]] = value
+            except Exception:
+                pass  # skip joints not present in this model variant
         mujoco.mj_forward(self.model, self.data)
+        # Reset the weld relative-pose to identity so the weld tracks the body exactly.
         for i in range(self.model.neq):
             if self.model.eq_type[i] == mujoco.mjtEq.mjEQ_WELD:
                 self.model.eq_data[i, :7] = np.array([0., 0., 0., 0., 0., 0., 1.])
+        # Align mocap exactly to the actual EE body pose — zero weld error, no torque spike.
+        # Crane orientation is enforced on every subsequent set_ee_target call.
         gl_pos = self.data.body(self.config.arm.ee_weld_body_name).xpos.copy()
         gl_quat = self.data.body(self.config.arm.ee_weld_body_name).xquat.copy()
         self.set_mocap_pos(self.config.arm.mocap_body_name, gl_pos)
         self.set_mocap_quat(self.config.arm.mocap_body_name, gl_quat)
         mujoco.mj_forward(self.model, self.data)
+
+    def move_arm_to_home(self) -> None:
+        """Drive the end-effector to home_position and settle.  Call after pieces have settled."""
         self.set_ee_target(np.array(self.config.arm.home_position))
         self.set_ee_quat(np.array(self.config.arm.crane_down_quat))
-        self.step(200)
+        self.step(self.config.waypoint.arm_settle_steps)
 
     def open_viewer(self) -> None:
         self._require_loaded()

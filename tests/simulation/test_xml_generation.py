@@ -14,7 +14,7 @@ def test_xml_generation_board_and_pieces() -> None:
     assert len(squares) == 64
     assert all(geom.attrib.get("contype") == "0" for geom in squares)
     assert len(root.findall(".//geom[@name='board_surface']")) == 1
-    assert root.find(".//body[@name='board_frame']").attrib["pos"] == "-0.28 -0.28 0.75"
+    assert root.find(".//body[@name='board_frame']").attrib["pos"] == "-0.28 -0.28 0.5"
     piece_bodies = [body for body in root.findall(".//body[freejoint]") if body.attrib["name"].startswith("piece")]
     assert len(piece_bodies) == 48
     names = [body.attrib["name"] for body in root.findall(".//body")]

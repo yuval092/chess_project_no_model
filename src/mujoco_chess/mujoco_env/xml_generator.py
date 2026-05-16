@@ -41,6 +41,14 @@ class XMLGenerator:
         self._merge_fetch_shared(root, asset)
         world = ET.SubElement(root, "worldbody")
         ET.SubElement(world, "light", {"name": "key_light", "pos": "0 0 3", "dir": "0 0 -1"})
+        ET.SubElement(world, "geom", {
+            "name": "floor",
+            "type": "plane",
+            "size": "5 5 0.1",
+            "pos": "0 0 0",
+            "rgba": "0.45 0.45 0.45 1",
+            "condim": "3",
+        })
         self._add_table(world)
         self._add_board(world)
         self._add_storage_platforms(world)
@@ -76,26 +84,68 @@ class XMLGenerator:
 
     def _add_table(self, world: ET.Element) -> None:
         b = self.config.board
-        ET.SubElement(
-            world,
-            "geom",
-            {
-                "name": "table",
+        # Table surface: a thick slab whose TOP face sits at table_height.
+        # The slab is 5 cm thick; its center is at table_height - 0.025.
+        slab_half_z = 0.025
+        slab_center_z = b.table_height - slab_half_z
+        # Half-width large enough to hold the board (with frame) plus 8 cm clearance.
+        board_half_with_frame = b.files * b.square_size / 2 + b.square_size / 2  # squares + 1 border
+        slab_half_xy = board_half_with_frame + 0.08
+        ET.SubElement(world, "geom", {
+            "name": "table_surface",
+            "type": "box",
+            "size": _fmt([slab_half_xy, slab_half_xy, slab_half_z]),
+            "pos": _fmt([0.0, 0.0, slab_center_z]),
+            "rgba": "0.45 0.36 0.28 1",
+        })
+        # Four legs: square cross-section, from floor (z=0) to slab bottom.
+        leg_half = 0.04
+        leg_half_z = (b.table_height - slab_half_z * 2) / 2
+        leg_center_z = leg_half_z
+        leg_offset = slab_half_xy - leg_half
+        for lx, ly in [(leg_offset, leg_offset), (leg_offset, -leg_offset),
+                       (-leg_offset, leg_offset), (-leg_offset, -leg_offset)]:
+            ET.SubElement(world, "geom", {
+                "name": f"table_leg_{int(lx*100)}_{int(ly*100)}",
                 "type": "box",
-                "size": "1.2 1.2 0.02",
-                "pos": f"0 0 {b.table_height - 0.02}",
-                "rgba": "0.35 0.34 0.32 1",
-            },
-        )
+                "size": _fmt([leg_half, leg_half, leg_half_z]),
+                "pos": _fmt([lx, ly, leg_center_z]),
+                "rgba": "0.38 0.30 0.22 1",
+            })
 
     def _add_board(self, world: ET.Element) -> None:
         b = self.config.board
         body = ET.SubElement(world, "body", {"name": "board_frame", "pos": _fmt([b.board_origin_x, b.board_origin_y, b.board_origin_z])})
-        board_half = b.files * b.square_size / 2
-        center = (b.files - 1) * b.square_size / 2
-        ET.SubElement(body, "geom", {"name": "board_base", "type": "box", "size": _fmt([board_half, board_half, b.board_thickness / 2]), "pos": _fmt([center, center, 0]), "material": "board"})
-        ET.SubElement(body, "geom", {"name": "board_surface", "type": "box", "size": _fmt([board_half, board_half, b.board_thickness / 2]), "pos": _fmt([center, center, 0]), "contype": "1", "conaffinity": "1", "material": "board"})
-        visual_z = b.board_thickness / 2 + 0.0005
+        # Squares span local x/y: [0, files*sq] = [0, 0.56].
+        # Equal 3.5 cm (half-square) border on all four sides:
+        #   board spans [-border, files*sq+border] = [-0.035, 0.595]
+        #   center = 0.28, half-extent = 0.315
+        border = b.square_size / 2
+        board_half = (b.files * b.square_size + 2.0 * border) / 2.0
+        board_center = b.files * b.square_size / 2.0
+        # board_origin_z is the BOTTOM of the board; geom center is half-thickness above that.
+        # board top = board_origin_z + board_thickness = board_surface_z ✓
+        board_geom_z = b.board_thickness / 2
+        ET.SubElement(body, "geom", {
+            "name": "board_base",
+            "type": "box",
+            "size": _fmt([board_half, board_half, b.board_thickness / 2]),
+            "pos": _fmt([board_center, board_center, board_geom_z]),
+            "contype": "0",
+            "conaffinity": "0",
+            "material": "board",
+        })
+        ET.SubElement(body, "geom", {
+            "name": "board_surface",
+            "type": "box",
+            "size": _fmt([board_half, board_half, b.board_thickness / 2]),
+            "pos": _fmt([board_center, board_center, board_geom_z]),
+            "contype": "1",
+            "conaffinity": "1",
+            "material": "board",
+        })
+        # Square visuals sit flush on top of the board surface.
+        visual_z = b.board_thickness + 0.0005
         for file_idx in range(8):
             for rank_idx in range(8):
                 name = f"square_{chess.FILE_NAMES[file_idx]}{rank_idx + 1}"

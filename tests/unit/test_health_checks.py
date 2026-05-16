@@ -24,7 +24,7 @@ from mujoco_chess.utils.config_loader import load_all_configs
 
 class FakeEnv:
     def __init__(self) -> None:
-        self.pos = {"piece_w_P_0": np.array([0.0, 0.0, 0.774])}
+        self.pos = {"piece_w_P_0": np.array([0.0, 0.0, 0.525])}
         self.quat = {"piece_w_P_0": np.array([1.0, 0.0, 0.0, 0.0])}
         self.vel = {"piece_w_P_0": (np.zeros(3), np.zeros(3))}
         self.contacts = []
@@ -46,7 +46,7 @@ def _registry() -> PhysicalPieceRegistry:
     board = chess.Board.empty()
     board.set_piece_at(chess.A2, chess.Piece(chess.PAWN, chess.WHITE))
     registry = PhysicalPieceRegistry(board=board)
-    registry.initialize({"piece_w_P_0": np.array([0.0, 0.0, 0.774])})
+    registry.initialize({"piece_w_P_0": np.array([0.0, 0.0, 0.525])})
     registry.records = {"piece_w_P_0": registry.records["piece_w_P_0"]}
     return registry
 
@@ -66,13 +66,15 @@ def test_piece_health_checks_fail_for_invalid_state() -> None:
     config = load_all_configs()
     env = FakeEnv()
     registry = _registry()
-    env.pos["piece_w_P_0"] = np.array([1.0, 0.0, 0.774])
+    env.pos["piece_w_P_0"] = np.array([1.0, 0.0, 0.525])
     assert not check_piece_not_drifted(env, registry, config).passed
-    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.70])
+    # sunk: below board_surface_z (0.52) minus sink_threshold (0.005) = 0.515
+    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.50])
     assert not check_piece_not_sunk(env, registry, config).passed
-    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.90])
+    # floating: above board_surface_z + base_height + float_threshold = 0.52+0.01+0.02 = 0.55
+    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.56])
     assert not check_piece_not_floating(env, registry, config).passed
-    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.774])
+    env.pos["piece_w_P_0"] = np.array([0.0, 0.0, 0.525])
     env.vel["piece_w_P_0"] = (np.array([1.0, 0.0, 0.0]), np.zeros(3))
     assert not check_no_unexpected_velocity(env, registry, config).passed
 

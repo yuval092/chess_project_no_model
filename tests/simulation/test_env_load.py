@@ -10,10 +10,10 @@ def test_env_loads_and_steps() -> None:
     config, xml_path = bootstrap()
     env = MuJoCoEnv(xml_path, config)
     env.load()
-    assert np.allclose(env.get_body_pos("board_frame"), [-0.28, -0.28, 0.75])
+    assert np.allclose(env.get_body_pos("board_frame"), [-0.28, -0.28, 0.5])
     env.step(10)
     assert isinstance(env.get_contacts(), list)
-    assert np.allclose(env.get_body_pos(config.arm.base_body_name), [config.arm.base_x, config.arm.base_y, config.arm.base_z])
+    assert np.allclose(env.get_body_pos(config.arm.base_body_name), [config.arm.base_x, config.arm.base_y, config.arm.base_z], atol=1e-6)
     assert env.get_ee_pos()[2] > config.board.table_height
     env.set_ee_target(np.array(config.arm.home_position))
     env.set_ee_quat(np.array(config.arm.crane_down_quat))

@@ -17,7 +17,12 @@ def test_all_pieces_settle_without_sinking_or_floating() -> None:
     ]
     positions = SettlePhase(env, config).run(piece_names)
     assert len(positions) == 48
-    min_z = config.board.board_surface_z - config.health.piece_sink_threshold_m
-    max_z = config.board.board_surface_z + config.pieces.base_height + config.health.piece_float_threshold_m
+    board_min_z = config.board.board_surface_z - config.health.piece_sink_threshold_m
+    board_max_z = config.board.board_surface_z + config.pieces.base_height + config.health.piece_float_threshold_m
+    floor_max_z = config.board.table_height - 0.05  # reserve/storage pieces sit on floor, not table
     for body_name, pos in positions.items():
-        assert min_z <= pos[2] <= max_z, (body_name, pos[2], min_z, max_z)
+        if "reserve" in body_name:
+            # Reserve pieces are stored on the floor before any promotion occurs.
+            assert pos[2] < floor_max_z, (body_name, pos[2], "expected on floor")
+        else:
+            assert board_min_z <= pos[2] <= board_max_z, (body_name, pos[2], board_min_z, board_max_z)

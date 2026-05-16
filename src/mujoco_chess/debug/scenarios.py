@@ -114,6 +114,9 @@ def test_grasp(
     if record is None:
         raise ValueError(f"No starting piece at {chess.square_name(square)}")
 
+    env.step(config.waypoint.piece_settle_steps)
+    env.move_arm_to_home()
+
     executor = executor or MotionExecutor(env, config.waypoint, config.arm)
     gripper = GripperController(env, config.arm)
     health_runner = HealthCheckRunner(env=env, registry=registry, config=config)

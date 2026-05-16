@@ -63,11 +63,14 @@ def main() -> None:
         env = MuJoCoEnv(xml_path, config)
         env.load()
 
-        print("Initializing Fetch arm...")
+        print("Initializing Fetch arm (freezing in crane pose)...")
         env.initialize_arm()
 
-        print(f"Running settle phase ({config.waypoint.initial_settle_steps} steps)...")
-        env.step(config.waypoint.initial_settle_steps)
+        print(f"Settling pieces ({config.waypoint.piece_settle_steps} steps)...")
+        env.step(config.waypoint.piece_settle_steps)
+
+        print(f"Moving arm to home position ({config.waypoint.arm_settle_steps} steps)...")
+        env.move_arm_to_home()
 
         print("Opening MuJoCo passive viewer...")
         env.open_viewer()

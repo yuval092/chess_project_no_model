@@ -41,11 +41,11 @@ class BoardConfig(StrictModel):
     board_rgba: list[float]
     table_height: float
     graveyard_slot_spacing: float = Field(default=0.075, gt=0)
-    graveyard_white_x_offset: float = Field(default=0.14, gt=0)
+    graveyard_x_gap: float = Field(default=0.05, gt=0)
     pawn_storage_slot_spacing: float = Field(default=0.05, gt=0)
-    pawn_storage_front_offset: float = Field(default=0.10, gt=0)
+    pawn_storage_front_offset: float = Field(default=0.20, gt=0)
     reserve_slot_spacing: float = Field(default=0.05, gt=0)
-    reserve_area_offset_y: float = Field(default=0.06, gt=0)
+    reserve_area_offset_y: float = Field(default=0.27, gt=0)
 
     _light_rgba = field_validator("light_square_rgba")(_rgba)
     _dark_rgba = field_validator("dark_square_rgba")(_rgba)
@@ -134,6 +134,8 @@ class WaypointConfig(StrictModel):
     stage_timeout_steps: int = Field(gt=0)
     grasp_z_offset: float
     release_z_offset: float
+    piece_settle_steps: int = Field(gt=0)
+    arm_settle_steps: int = Field(gt=0)
     initial_settle_steps: int = Field(gt=0)
     gripper_settle_steps: int = Field(gt=0)
     robot_joint_velocity_threshold: float = Field(gt=0)

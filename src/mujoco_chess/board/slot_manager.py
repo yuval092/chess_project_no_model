@@ -24,16 +24,28 @@ class SlotManager:
     def free_graveyard_slot(self, color: chess.Color, slot_index: int) -> None:
         self._graveyard_used[color].discard(slot_index)
 
+    # Z height for all off-board storage areas: on the floor, not on the table.
+    _FLOOR_Z: float = 0.01
+
     def graveyard_slot_world_pos(self, color: chess.Color, slot_index: int) -> np.ndarray:
         self._validate_index(slot_index, 16)
         spacing = self.board.graveyard_slot_spacing
         col = slot_index % 2
         row = slot_index // 2
-        # WHITE: graveyard_white_x_offset to the left of board, BLACK: 1 square to the right.
-        # y starts at board_origin_y + 0.5*spacing so the bottom row clears the arm's
-        # maximum extension limit at the board-corner (x=±0.42, y=-0.28).
-        x0 = self.board.board_origin_x - self.board.graveyard_white_x_offset if color == chess.WHITE else self.board.board_origin_x + 9 * self.board.square_size
-        return np.array([x0 + col * spacing, self.board.board_origin_y + (row + 0.5) * spacing, self.board.board_surface_z], dtype=float)
+        # Graveyards sit on the floor to the left (white) and right (black) of the table.
+        # The table x half-extent matches the computation in xml_generator._add_table().
+        border = self.board.square_size / 2
+        board_half_x = self.board.files * self.board.square_size / 2
+        table_half_x = board_half_x + border + 0.08  # 8 cm clearance, matches xml_generator
+        gap = self.board.graveyard_x_gap
+        if color == chess.WHITE:
+            # Left (x-) side: col 0 closest to table, col 1 one step further left.
+            x = -(table_half_x + gap + col * spacing)
+        else:
+            # Right (x+) side: col 0 closest to table, col 1 one step further right.
+            x = table_half_x + gap + col * spacing
+        y = self.board.board_origin_y + row * spacing
+        return np.array([x, y, self._FLOOR_Z], dtype=float)
 
     def allocate_pawn_storage_slot(self, color: chess.Color) -> int:
         return self._allocate(self._pawn_storage_used[color], 8, "pawn storage")
@@ -44,13 +56,14 @@ class SlotManager:
     def pawn_storage_slot_world_pos(self, color: chess.Color, slot_index: int) -> np.ndarray:
         self._validate_index(slot_index, 8)
         spacing = self.board.pawn_storage_slot_spacing
-        total_slots = 16  # 8 white + 8 black share one row behind the board (positive y, near arm)
+        total_slots = 16  # 8 white + 8 black
         color_offset = 0 if color == chess.WHITE else 8
         col = color_offset + slot_index
         board_width = self.board.files * self.board.square_size
         x0 = self.board.board_origin_x + (board_width - (total_slots - 1) * spacing) / 2
-        y = self.board.board_max_y + self.board.pawn_storage_front_offset
-        return np.array([x0 + col * spacing, y, self.board.board_surface_z], dtype=float)
+        # Pawn storage is on the floor south of the board (y- direction, away from arm).
+        y = self.board.board_origin_y - self.board.pawn_storage_front_offset
+        return np.array([x0 + col * spacing, y, self._FLOOR_Z], dtype=float)
 
     def get_reserve_slot(self, color: chess.Color, piece_type: chess.PieceType) -> int | None:
         key = (color, piece_type)
@@ -77,8 +90,9 @@ class SlotManager:
         total_columns = len(self.RESERVE_TYPES) * 2 * 2
         board_width = self.board.files * self.board.square_size
         x0 = self.board.board_origin_x + (board_width - (total_columns - 1) * spacing) / 2
-        y = self.board.board_max_y + self.board.reserve_area_offset_y
-        return np.array([x0 + column * spacing, y, self.board.board_surface_z], dtype=float)
+        # Reserve area is on the floor south of the board (y- direction, away from arm).
+        y = self.board.board_origin_y - self.board.reserve_area_offset_y
+        return np.array([x0 + column * spacing, y, self._FLOOR_Z], dtype=float)
 
     def reset(self) -> None:
         self._graveyard_used: dict[chess.Color, set[int]] = {chess.WHITE: set(), chess.BLACK: set()}
