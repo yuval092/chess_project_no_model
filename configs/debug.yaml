@@ -1,0 +1,6 @@
+enabled: false
+show_square_centers: false
+show_waypoint_path: false
+highlight_target_piece: false
+pause_before_stage: false
+step_mode: false

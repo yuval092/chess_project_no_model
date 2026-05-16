@@ -1,0 +1,8 @@
+log_dir: logs
+app_log_level: INFO
+simulation_log_level: INFO
+motion_log_level: INFO
+health_log_level: INFO
+debug_log_level: DEBUG
+max_bytes: 1048576
+backup_count: 3

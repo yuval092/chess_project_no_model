@@ -1,0 +1,12 @@
+base_radius: 0.018
+base_height: 0.008
+shaft_radius: 0.010
+shaft_height: 0.040
+mass: 0.04
+friction: [1.0, 0.005, 0.0001]
+solimp: [0.95, 0.99, 0.001]
+solref: [0.01, 1.0]
+white_rgba: [0.95, 0.92, 0.86, 1.0]
+black_rgba: [0.08, 0.09, 0.10, 1.0]
+stl_scale: 0.0
+stl_placeholders: true

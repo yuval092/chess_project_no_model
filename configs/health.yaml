@@ -1,0 +1,8 @@
+piece_tilt_threshold_deg: 10.0
+piece_drift_threshold_m: 0.015
+piece_sink_threshold_m: 0.005
+piece_float_threshold_m: 0.02
+unexpected_velocity_threshold: 0.02
+grasp_contact_required: true
+slip_velocity_threshold: 0.02
+collision_contact_threshold: 5.0

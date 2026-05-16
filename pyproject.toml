@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mujoco_chess"
+version = "0.1.0"
+description = "MuJoCo robotic chess simulation with python-chess logic and scripted arm motion."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "mujoco",
+  "python-chess",
+  "pygame",
+  "pyyaml",
+  "pydantic>=2",
+  "numpy",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+mujoco-chess = "mujoco_chess.app.startup:main"
+mujoco-chess-debug = "mujoco_chess.debug.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "stress: long-running simulation stress tests",
+]

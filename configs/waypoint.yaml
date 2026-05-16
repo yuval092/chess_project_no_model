@@ -1,0 +1,17 @@
+safe_hover_clearance: 0.09
+descent_speed: 0.004
+transit_speed: 0.008
+ascent_speed: 0.004
+position_tolerance: 0.01
+velocity_threshold_linear: 0.02
+velocity_threshold_angular: 0.05
+held_piece_velocity_threshold: 0.03
+settle_steps: 25
+stage_timeout_steps: 1000
+grasp_z_offset: 0.0
+release_z_offset: 0.004
+initial_settle_steps: 100
+gripper_settle_steps: 200
+robot_joint_velocity_threshold: 0.05
+gripper_joint_velocity_threshold: 0.05
+released_piece_velocity_threshold: 0.02

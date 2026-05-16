@@ -1,0 +1,24 @@
+base_x: 0.0
+base_y: 0.65
+base_z: 0.25
+base_yaw: -1.5707963268
+home_position: [0.0, 0.0, 0.8598]
+gripper_open_width: 0.05
+gripper_grasp_width: 0.022
+gripper_hold_width: 0.022
+base_body_name: "robot0:base_link"
+ee_site_name: "robot0:grip"
+ee_weld_body_name: "robot0:gripper_link"
+gripper_left_actuator: "robot0:l_gripper_finger_joint"
+gripper_right_actuator: "robot0:r_gripper_finger_joint"
+mocap_body_name: "ee_target"
+crane_down_quat: [0.7071, 0.0, 0.7071, 0.0]
+initial_qpos:
+  robot0:torso_lift_joint: 0.1999
+  robot0:shoulder_pan_joint: 0.1509
+  robot0:shoulder_lift_joint: -0.0355
+  robot0:upperarm_roll_joint: -0.5025
+  robot0:elbow_flex_joint: 2.0183
+  robot0:forearm_roll_joint: -0.3648
+  robot0:wrist_flex_joint: -1.6536
+  robot0:wrist_roll_joint: 0.0467
