@@ -113,6 +113,26 @@ class XMLGenerator:
                         "material": material,
                     },
                 )
+        # Debug square-center markers (only when debug.show_square_centers is True)
+        if self.config.debug.show_square_centers:
+            debug_z = b.board_thickness + 0.001
+            for file_idx in range(8):
+                for rank_idx in range(8):
+                    file_name = chess.FILE_NAMES[file_idx]
+                    rank_name = str(rank_idx + 1)
+                    ET.SubElement(
+                        body,
+                        "geom",
+                        {
+                            "name": f"debug_center_{file_name}{rank_name}",
+                            "type": "sphere",
+                            "size": "0.005",
+                            "pos": _fmt([file_idx * b.square_size + b.square_size / 2, rank_idx * b.square_size + b.square_size / 2, debug_z]),
+                            "contype": "0",
+                            "conaffinity": "0",
+                            "rgba": "1 0 0 1",
+                        },
+                    )
 
     def _add_storage_platforms(self, world: ET.Element) -> None:
         for color, label in ((chess.WHITE, "white"), (chess.BLACK, "black")):

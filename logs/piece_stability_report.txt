@@ -1,0 +1,50 @@
+  FAIL piece_b_B_0                         z=0.7672  tilt=57.9deg  vel=0.0917  TILT 57.9deg>10.0deg  VEL 0.0917>0.02
+  FAIL piece_b_B_1                         z=0.7674  tilt=59.3deg  vel=0.0859  TILT 59.3deg>10.0deg  VEL 0.0859>0.02
+  FAIL piece_b_K_0                         z=0.7672  tilt=57.9deg  vel=0.0949  TILT 57.9deg>10.0deg  VEL 0.0949>0.02
+  FAIL piece_b_N_0                         z=0.7672  tilt=57.3deg  vel=0.0859  TILT 57.3deg>10.0deg  VEL 0.0859>0.02
+  FAIL piece_b_N_1                         z=0.7675  tilt=60.6deg  vel=0.0984  TILT 60.6deg>10.0deg  VEL 0.0984>0.02
+  FAIL piece_b_P_0                         z=0.7674  tilt=59.4deg  vel=0.0943  TILT 59.4deg>10.0deg  VEL 0.0943>0.02
+  PASS piece_b_P_1                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  PASS piece_b_P_2                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_b_P_3                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_b_P_4                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  PASS piece_b_P_5                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_b_P_6                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_b_P_7                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  FAIL piece_b_Q_0                         z=0.7671  tilt=57.3deg  vel=0.0950  TILT 57.3deg>10.0deg  VEL 0.0950>0.02
+  FAIL piece_b_R_0                         z=0.7679  tilt=93.2deg  vel=0.2081  TILT 93.2deg>10.0deg  VEL 0.2081>0.02
+  FAIL piece_b_R_1                         z=0.7674  tilt=59.4deg  vel=0.0943  TILT 59.4deg>10.0deg  VEL 0.0943>0.02
+  PASS piece_reserve_b_B_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_B_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_N_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_N_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_Q_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_Q_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_R_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_b_R_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_B_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_B_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_N_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_N_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_Q_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_Q_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_R_0                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_reserve_w_R_1                 z=0.7758  tilt=0.0deg  vel=0.0000  
+  PASS piece_w_B_0                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_B_1                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_K_0                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_N_0                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  PASS piece_w_N_1                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  FAIL piece_w_P_0                         z=0.7672  tilt=57.9deg  vel=0.0917  TILT 57.9deg>10.0deg  VEL 0.0917>0.02
+  PASS piece_w_P_1                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_P_2                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_P_3                         z=0.7658  tilt=0.1deg  vel=0.0002  
+  PASS piece_w_P_4                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  PASS piece_w_P_5                         z=0.7658  tilt=0.1deg  vel=0.0003  
+  PASS piece_w_P_6                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_P_7                         z=0.7658  tilt=0.2deg  vel=0.0004  
+  PASS piece_w_Q_0                         z=0.7658  tilt=0.3deg  vel=0.0005  
+  FAIL piece_w_R_0                         z=0.7672  tilt=57.3deg  vel=0.0860  TILT 57.3deg>10.0deg  VEL 0.0860>0.02
+  PASS piece_w_R_1                         z=0.7658  tilt=0.3deg  vel=0.0005  
+
+Result: 37 passed, 11 failed

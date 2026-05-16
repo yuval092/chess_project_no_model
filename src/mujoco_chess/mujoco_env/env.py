@@ -44,8 +44,15 @@ class MuJoCoEnv:
     def step(self, n: int = 1) -> None:
         self._require_loaded()
         import mujoco
-        for _ in range(n):
+        for i in range(n):
             mujoco.mj_step(self.model, self.data)
+            if self.viewer is not None and i % 10 == 0:
+                self.viewer.sync()
+
+    def sync_viewer(self) -> None:
+        """Push current simulation state to the passive viewer (no-op if no viewer)."""
+        if self.viewer is not None:
+            self.viewer.sync()
 
     def get_body_pos(self, body_name: str) -> np.ndarray:
         self._require_loaded()

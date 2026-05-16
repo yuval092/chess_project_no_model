@@ -30,4 +30,11 @@ Current implementation state is tracked here as milestones are implemented and v
 | 24 - Castling | Complete | `tests/integration/test_special_moves.py` castling tests pass (kingside/queenside, both colors, registry sync); `run-scenario castling` CLI handler implemented |
 | 25 - En Passant | Complete | `tests/integration/test_special_moves.py` en passant tests pass (correct source square d5 not d6, graveyard slot, attacker destination, registry sync); `run-scenario en-passant` CLI handler implemented |
 | 26 - Promotion | Complete | `tests/integration/test_special_moves.py` promotion tests pass (normal push-promotion, capture-promotion, pawn→storage teleport, reserve piece→board teleport, registry sync); `run-scenario promotion` CLI handler implemented |
-| 27+ | Pending | Recovery/rollback, random games, stress tests, and final documentation remain pending |
+| 27 - BoardUI (Pygame Chess Board) | Complete | Full Pygame board with 8×8 grid, piece circles with letters, sidebar, AI/Reset buttons, promotion popup, state/event queues; `tests/unit/test_event_handler.py` passes (6 tests) |
+| 28 - Full Game Loop | Complete | `GameLoop.run()` and `reset()` implemented; `run-random-game` CLI wired; `tests/integration/test_game_reset.py` passes (4 tests) |
+| 29 - Full Health Check Integration | Complete | `build_health_runner()` in `startup.py` registers STARTUP checks; `health_runner` parameter in `GameLoop` calls START_OF_TURN and END_OF_TURN around `execute_chess_move()` |
+| 30 - Full Debug Runner Commands | Complete | `reset-piece --body`, `reset-arm`, and `clear-velocities` sub-commands added to debug CLI; `run-random-game` implemented |
+| 31 - Visual Debugging (Minimal) | Complete | `xml_generator.py` adds debug sphere geoms when `debug.show_square_centers=True`; `VisualMarkers.highlight_square()` implemented |
+| 32 - Stress Test Scaffold | Complete | `tests/simulation/test_stress.py` with `@pytest.mark.stress`; excluded from normal runs, 2 scaffold tests pass |
+| 33 - Documentation | Complete | `milestone_status.md`, `testing.md`, `debugging.md`, `development_guide.md`, and `deviations.md` updated for M27–M32 |
+| 34 - End-to-End Validation | Complete | All 79 automated tests pass; `main.py` launches the full game (MuJoCo viewer + Pygame UI); debug CLI has full `--viewer` support, `inspect-piece-stability`, `run-waypoint-stage`, and comprehensive help text; `debugging.md` updated with complete command reference |
